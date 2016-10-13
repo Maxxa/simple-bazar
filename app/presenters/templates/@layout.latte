@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+
+    <title>{ifset title}{include title} | {/ifset}Bazar radiotechniky</title>
+
+    <link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <link rel="stylesheet" href="{$basePath}/sass/materialize.css">
+    <link rel="stylesheet" href="{$basePath}/sass/materialize.css.map">
+    <link rel="stylesheet" href="{$basePath}/sass/customForm.css">
+    <link rel="stylesheet" href="{$basePath}/venobox/venobox.css" type="text/css" media="screen"/>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <link href="data:image/x-icon;base64,AAABAAEAEBAQAAEABAAoAQAAFgAAACgAAAAQAAAAIAAAAAEABAAAAAAAgAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAmZaTANvX0wDHw78ADw8PAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAEAAAAAEAEQAQAAAAAQEAEBAAAAAAEAABAAAAAAAQAAEAAAAAABARAQAAAAAAAQAQAAAAAACJABCIAAAACAEAEACAAACABBEAQAgACABAEQAEAICABAARAABACIAEAEzEAEAIgAQATMQAQAgIAEAEQAQAgACABAAAQAgD37wAA9m8AAPWvAAD73wAA+98AAPpfAAD9vwAA8Y8AAO23AADaWwAAtm0AAG52AABsNgAAbDYAALZtAADb2wAA" rel="icon" type="image/x-icon" />
+</head>
+
+<body>
+
+<div class="container">
+
+    {include content}
+
+</div>
+
+
+{block scripts}
+    <script src="https://nette.github.io/resources/js/netteForms.min.js"></script>
+    <script type="text/javascript" src="http://code.jquery.com/jquery-latest.min.js"></script>
+    <script type="text/javascript" src="{$basePath}/venobox/venobox.min.js"></script>
+    <script src="{$basePath}/js/bin/materialize.js"></script>
+    <script type="text/javascript" src="{$basePath}/js/live-form-validation.js"></script>
+    <script type="text/javascript" src="{$basePath}/js/frontNetteForm.js"></script>
+    <script type="text/javascript" src="{$basePath}/js/parser.js"></script>
+    <script type="text/javascript" src="{$basePath}/js/recaptcha.js"></script>
+    <script type="text/javascript" src="{$basePath}/js/ga.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('select').material_select();
+            $('textarea').trigger('autoresize');
+            $('.collapsible').collapsible({
+                accordion: false // A setting that changes the collapsible behavior to expandable instead of the default accordion style
+            });
+            $('.modal-trigger').leanModal();
+            $('.venobox').venobox();
+
+            {foreach $flashes as $flash}
+            Materialize.toast({$flash->message}, 5000, {if $flash->type == success}'green'
+            {else}'red'{/if}) // 'rounded' is the class I'm applying to the toast
+            {/foreach}
+
+        });
+    </script>
+    <script src="//s3-eu-west-1.amazonaws.com/fucking-eu-cookies/cz.js" async></script>
+{/block}
+</body>
+</html>

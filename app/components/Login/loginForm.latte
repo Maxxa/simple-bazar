@@ -1,0 +1,20 @@
+<form n:name="form" class="form-signin">
+    <div n:foreach="$form->getErrors() as $error" class="alert alert-danger">
+        {$error}
+    </div>
+    <h2 class="form-signin-heading">Přihlášení</h2>
+    <div class="form-group">
+
+        <label n:name="username" for="inputEmail" class="sr-only">Uživatelské jméno</label>
+        <input n:name="username" type="text" id="inputEmail" class="form-control"
+                                 placeholder="Uživatelské jméno"
+                                 required
+                                 autofocus>
+    </div>
+    <div class="form-group">
+        <label n:name="password" for="inputPassword" class="sr-only">Heslo</label>
+        <input n:name="password" type="password" id="inputPassword" class="form-control" placeholder="Heslo"
+                                 required>
+    </div>
+    <button n:name="login" class="btn btn-lg btn-primary btn-block" type="submit">Přihlásit</button>
+</form>

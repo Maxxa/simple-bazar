@@ -1,0 +1,11 @@
+
+{block content}
+
+{if $user->isLoggedIn() == 0}
+    {control loginForm}
+{else}
+    <h1>Jste přihlášen</h1>
+
+    <a n:href="Auth:logout" class="btn">Odhlásit</a>
+
+{/if}

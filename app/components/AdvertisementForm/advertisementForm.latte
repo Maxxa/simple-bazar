@@ -1,0 +1,70 @@
+<ul class="collapsible popout" data-collapsible="accordion">
+    <li>
+        <div class="collapsible-header waves-effect waves-light green z-depth-1">
+            <i class="material-icons prefix">play_for_work</i> Přidat nový inzerát</div>
+        <div class="collapsible-body collapsible-container">
+            <div class="row">
+                <form n:name="form" class="col s12">
+
+                    <div class="row">
+                        <div class="input-field col s12 m6 l6">
+                            <i class="material-icons prefix">account_circle</i>
+                            {input name class=>"input-field"}
+                            {label name data-error=>"wrong"/}
+                        </div>
+
+                        <div class="input-field col s12 m6 l6">
+                            <i class="material-icons prefix">email</i>
+                            {input email class=>"input-field"}
+                            {label email /}
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="input-field col s12">
+                            <i class="material-icons prefix">import_export</i>
+                            {input type class=>"input-field"}
+                            {label type /}
+                        </div>
+                    </div>
+
+
+                    <div class="row">
+                        <div class="input-field col s12">
+                            <i class="material-icons prefix">message</i>
+                            {input text class=>"materialize-textarea input-field"}
+                            {label text /}
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col s12">
+                            <div class="file-field input-field">
+                                <div class="btn blue">
+                                    <span>Obrázek</span>
+                                    {input image}
+                                </div>
+                                <div class="file-path-wrapper">
+                                    <input class="file-path validate" type="text"
+                                           placeholder="Vyberte fotky k inzerátu"
+                                           novalidate>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col s12">
+                            {*{input captcha}*}
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col s12">
+                            {input save class=>"btn green"}
+                        </div>
+                    </div>
+
+                </form>
+            </div>
+        </div>
+    </li>
+</ul>

@@ -1,0 +1,132 @@
+<ul class="collapsible popout" data-collapsible="accordion">
+    <li>
+        <div class="collapsible-header active waves-effect waves-light grey lighten-5 z-depth-1">Filtr</div>
+        <div class="collapsible-body collapsible-container">
+            <div class="row ">
+                <form n:name="filtr" class="col s12">
+                    <div class="row">
+                        <div class="input-field col s3">
+                            <div class="switch">
+                                <label>
+                                    Koupím
+                                    <input n:name="purchase" type="checkbox" class="input-field">
+                                    <span class="lever"></span>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="input-field col s3">
+                            <div class="switch">
+                                <label>
+                                    Prodám
+                                    <input n:name="sale" type="checkbox">
+                                    <span class="lever"></span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="col s3 input-field">
+                            {input onFilter class=>"btn green"}
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </li>
+</ul>
+{if $paginator !=null && $paginator->getPageCount()>1}
+    <ul class="pagination">
+        <li class="{if $paginator->isFirst()}disabled{else}waves-effect{/if}"><a
+                    href="{if $paginator->isFirst()}#{else}{plink this page=>$paginator->getPage()-1}{/if}"><i
+                        class="material-icons">chevron_left</i></a>
+        </li>
+        {for $i= 1; $i<=$paginator->getPageCount();$i++}
+            <li class="{if $paginator->getPage()==$i}active{else}waves-effect{/if}"><a
+                        href="{if $paginator->getPage()!=$i}{plink this page=>$i}{else}#{/if}">{$i}</a></li>
+        {/for}
+        <li class="{if $paginator->isLast()}disabled{else}waves-effect{/if}"><a
+                    href="{if $paginator->isLast()}#{else}{plink this page=>$paginator->getPage()+1}{/if}"><i
+                        class="material-icons">chevron_right</i></a>
+        </li>
+    </ul>
+{/if}
+
+{foreach $rows as $row}
+
+    <div class="row">
+        <div class="col s12">
+            <div class="card darken-1">
+                <div class="card-content">
+                    <div class="row">
+                        <div class="col s7 m9 l10">
+                            <p>
+                                {!$control->buildText($row['text'])}
+                            </p>
+                            {if $user->isLoggedIn()==1 && $history}
+                                {var $code = base64_encode($row['id'])}
+
+                                <a href="{plink Deactivate:default id=>$code,history=>true}" class="chip btn waves-light blue">
+                                    <i class="small material-icons ">done</i>
+                                </a>
+                            {/if}
+                        </div>
+                        <div class="col s4 m3 l2">
+                            {if $row['image']!=null}
+                                {var $codeId = base64_encode($row['id'])}
+                                <a class="waves-effect waves-light venobox" href="{plink Files:photo id=>$codeId}">
+                                    <img src="{$control->buildImage($row['image'])|dataStream}"/>
+                                </a>
+                            {/if}
+                        </div>
+                    </div>
+
+                </div>
+                <div class="card-action">
+                    <div class="row">
+                        <div class="col s12 m3 l3">
+                            <div class="chip">
+                                {if $row['type']==sale}
+                                    Prodám
+                                {else}
+                                    Koupím
+                                {/if}
+
+                            </div>
+                            {if $row['enabled']==0}
+                                <div class="chip red">
+                                    Neaktivní
+                                </div>
+                            {/if}
+
+
+                        </div>
+                        <div class="col s12 m6 l7 line-action">
+
+                            <strong>{$row['name']}</strong>
+                            {var $email = $control->buildEmail($row['email'])}
+                            <span>&nbsp;</span><a href="#" class="em-address">{$email}</a>
+                        </div>
+                        <div class="col s12 m3 l2 right-align line-action">
+                            {$row['timestamp']|date:'d. m. Y'}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{/foreach}
+
+{if $rows->count() == 0}
+    <div class="row">
+        <div class="col s12">
+            <div class="card blue lighten-2">
+                <div class="card-content valign-wrapper center-align">
+                    <i class="small material-icons ">info</i>
+                    Bohužel nebyl nalezen žádný inzerát!
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+{/if}
