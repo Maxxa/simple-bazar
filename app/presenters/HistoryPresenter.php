@@ -9,20 +9,14 @@ use Nette;
 use Nette\Utils\Paginator;
 
 
-class HistoryPresenter extends Nette\Application\UI\Presenter
+class HistoryPresenter extends BasePresenter
 {
 
     /** @var IAdvertisementList @inject */
     public $listFactory;
 
-    /** @var int @persistent */
-    public $page;
-
     /** @var Paginator */
     private $paginator;
-
-    /** @var string @persistent */
-    public $filter;
 
     public function actionDefault()
     {

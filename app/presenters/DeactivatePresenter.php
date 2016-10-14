@@ -8,7 +8,7 @@ use App\Model\AdvertismentManager;
 use Nette;
 
 
-class DeactivatePresenter extends Nette\Application\UI\Presenter
+class DeactivatePresenter extends BasePresenter
 {
 
     /** @var AdvertismentManager @inject */

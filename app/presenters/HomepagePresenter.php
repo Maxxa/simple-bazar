@@ -8,7 +8,7 @@ use App\Model\AdvertismentManager;
 use Nette;
 
 
-class HomepagePresenter extends Nette\Application\UI\Presenter
+class HomepagePresenter extends BasePresenter
 {
 
     /** @var IAdvertisementForm @inject */
@@ -16,9 +16,6 @@ class HomepagePresenter extends Nette\Application\UI\Presenter
 
     /** @var IAdvertisementList @inject */
     public $listFactory;
-
-    /** @var string @persistent */
-    public $filter;
 
     public function createComponentForm()
     {
