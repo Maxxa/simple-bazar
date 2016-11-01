@@ -25,10 +25,11 @@ class MailManager
      */
     private $subject;
 
-    public function __construct($mailFrom, $subject, Context $database)
+    public function __construct($mailFrom, $mailAdmin, $subject, Context $database)
     {
         $this->database = $database;
         $this->mailFrom = $mailFrom;
+        $this->mailAdmin = $mailAdmin;
         $this->subject = $subject;
     }
 
@@ -55,6 +56,22 @@ class MailManager
                 ->setHtmlBody($body);
             $mailer = new SendmailMailer;
             $mailer->send($mail);
+
+            $params['email'] = $row->email;
+            $params['text'] = $row->text;
+            $params['name'] = $row->name;
+
+            $body = $message->renderToString(__DIR__ . '/../presenters/templates/emailAdmin.latte', $params);
+            $mail = new Message;
+            $mail->setFrom($this->mailFrom)
+                ->addTo($this->mailAdmin)
+                ->setSubject("Nový inzerát!")
+                ->setHtmlBody($body);
+            $mailer = new SendmailMailer;
+            $mailer->send($mail);
+
+
+
         } catch (Exception $ex) {
         } catch (InvalidArgumentException $ex) {
 

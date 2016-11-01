@@ -99,14 +99,14 @@
 
 
                         </div>
-                        <div class="col s12 m6 l7 line-action">
+                        <div class="col s12 m6 l6 line-action">
 
                             <strong>{$row['name']}</strong>
                             {var $email = $control->buildEmail($row['email'])}
                             <span>&nbsp;</span><a href="#" class="em-address">{$email}</a>
                         </div>
-                        <div class="col s12 m3 l2 right-align line-action">
-                            {$row['timestamp']|date:'d. m. Y'}
+                        <div class="col s12 m3 l3 right-align line-action">
+                            {$row['timestamp']|date:'d. m. Y H:m'}
                         </div>
                     </div>
                 </div>

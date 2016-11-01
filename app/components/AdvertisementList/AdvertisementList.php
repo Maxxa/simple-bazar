@@ -104,7 +104,7 @@ class AdvertisementList extends BaseComponent
 
     public function buildText($text)
     {
-        $text = Strings::replace($text, "/$/m", "<br>");
+        $text = Strings::replace($text, "/$/m", " <br>");
         // The Regular Expression filter
         $reg_exUrl = "/(http|https|ftp|ftps)\:\/\/[a-zA-Z0-9\-\.]+\.[a-zA-Z]{2,3}(\/\S*)?/";
         if (preg_match($reg_exUrl, $text, $url)) {

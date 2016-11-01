@@ -1,5 +1,6 @@
 parameters:
 	mail-from: '####'
+	mail-admin: '####'
 	subject: "Inzerát byl úspěšně přidán"
 	history-item-per-page: 25
 
@@ -26,5 +27,5 @@ services:
 	- App\Components\IAdvertisementList
 	- App\Model\AdvertismentManager
 	- App\Model\UserManager(%userName%,%userPassword%)
-	- App\Model\MailManager(%mail-from%,%subject%)
+	- App\Model\MailManager(%mail-from%,%mail-admin%,%subject%)
 	- App\AdminModule\Forms\ILoginForm
