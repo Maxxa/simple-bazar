@@ -61,18 +61,18 @@
                             <p>
                                 {!$control->buildText($row['text'])}
                             </p>
+                            {var $cryptoId = $control->cryptId($row['id'])}
                             {if $user->isLoggedIn()==1 && $history}
-                                {var $code = base64_encode($row['id'])}
 
-                                <a href="{plink Deactivate:default id=>$code,history=>true}" class="chip btn waves-light blue">
+                                <a href="{plink Deactivate:default id=>$cryptoId,history=>true}"
+                                   class="chip btn waves-light blue">
                                     <i class="small material-icons ">done</i>
                                 </a>
                             {/if}
                         </div>
                         <div class="col s4 m3 l2">
                             {if $row['image']!=null}
-                                {var $codeId = base64_encode($row['id'])}
-                                <a class="waves-effect waves-light venobox" href="{plink Files:photo id=>$codeId}">
+                                <a class="waves-effect waves-light venobox" href="{plink Files:photo id=>$cryptoId}">
                                     <img src="{$control->buildImage($row['image'])|dataStream}"/>
                                 </a>
                             {/if}

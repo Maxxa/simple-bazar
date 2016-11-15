@@ -1,9 +1,10 @@
 parameters:
 	mail-from: '####'
-	mail-admin: '####'
+	mail-admin: ['####','aaa']
 	subject: "Inzerát byl úspěšně přidán"
 	history-item-per-page: 25
-
+	security-key: 'LgJ9yPD5mfmvI9RkygYXrA==' ## DEFAULT PRIVATE KEY .. YOU MUST CHANGE!!!
+	security-change-day: '15. 11. 2016'
 application:
 	errorPresenter: Error
 	mapping:
@@ -25,7 +26,8 @@ services:
 	router: App\RouterFactory::createRouter
 	- App\Components\IAdvertisementForm
 	- App\Components\IAdvertisementList
-	- App\Model\AdvertismentManager
+	- App\Model\AdvertismentManager(%security-change-day%)
 	- App\Model\UserManager(%userName%,%userPassword%)
 	- App\Model\MailManager(%mail-from%,%mail-admin%,%subject%)
 	- App\AdminModule\Forms\ILoginForm
+	- App\Collegas\Security\CryptoService(%security-key%)

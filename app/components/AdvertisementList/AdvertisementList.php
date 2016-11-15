@@ -1,6 +1,7 @@
 <?php
 namespace App\Components;
 
+use App\Collegas\Security\CryptoService;
 use App\Helpers\ImageUtil;
 use App\Model\AdvertismentManager;
 use Nette\Application\UI\Form;
@@ -20,14 +21,20 @@ class AdvertisementList extends BaseComponent
      * @var Paginator
      */
     private $paginator;
+    /**
+     * @var CryptoService
+     */
+    private $cryptoHelper;
 
     /**
      * AdvertisementForm constructor.
      * @param AdvertismentManager $manager
+     * @param CryptoService $cryptoHelper
      */
-    public function __construct(AdvertismentManager $manager)
+    public function __construct(AdvertismentManager $manager, CryptoService $cryptoHelper)
     {
         $this->manager = $manager;
+        $this->cryptoHelper = $cryptoHelper;
     }
 
     public function render()
@@ -112,6 +119,11 @@ class AdvertisementList extends BaseComponent
             $text = preg_replace($reg_exUrl, "<a href=\"{$url}\">{$url}</a> ", $text);
         }
         return $text;
+    }
+
+    public function cryptId($id)
+    {
+        return  $this->cryptoHelper->encrypt($id);
     }
 
     public function buildImage($image)

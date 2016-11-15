@@ -1,23 +1,33 @@
 <?php
 namespace App\Model;
 
+use App\Collegas\Security\CryptoService;
+use Exception;
 use Nette\Database\Context;
 use Nette\Utils\DateTime;
 
 class AdvertismentManager
 {
 
+    const TABLE_NAME = "advertisement";
     const SALE = "sale";
+
     const PURCHASE = "purchase";
 
     /** @var Context */
     private $database;
 
-    const TABLE_NAME = "advertisement";
+    private $dateParam;
+    /**
+     * @var CryptoService
+     */
+    private $cryptoService;
 
-    public function __construct(Context $database)
+    public function __construct($dateParam, Context $database, CryptoService $cryptoHelper)
     {
         $this->database = $database;
+        $this->dateParam = DateTime::createFromFormat('d. m. Y', $dateParam);
+        $this->cryptoService = $cryptoHelper;
     }
 
     public function close($id)
@@ -82,7 +92,7 @@ class AdvertismentManager
 
     public function deactivate($id)
     {
-        $row = $this->row($id);
+        $row = $this->findRowId($id);
         if ($row == null || $row == false) {
             return false;
         }
@@ -90,8 +100,24 @@ class AdvertismentManager
         return true;
     }
 
-    public function dataAll() {
+    public function dataAll()
+    {
         return $this->database->table(self::TABLE_NAME)->order("timestamp DESC");
     }
 
+    public function findRowId($id)
+    {
+        $decodedId = base64_decode($id);
+        $row = $this->row($decodedId);
+        if ($row != FALSE && $this->dateParam->getTimestamp() > $row->timestamp->getTimestamp()) {
+            return $row;
+        }
+
+        try {
+            $id = $this->cryptoService->decrypt($id);
+        } catch (Exception $ex) {
+            return false;
+        }
+        return $this->row($id);
+    }
 }

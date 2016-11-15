@@ -1,6 +1,7 @@
 <?php
 namespace App\Model;
 
+use App\Collegas\Security\CryptoService;
 use App\Components\BaseComponent;
 use Latte\Engine;
 use Nette\Bridges\ApplicationLatte\UIMacros;
@@ -24,13 +25,26 @@ class MailManager
      * @var
      */
     private $subject;
+    /**
+     * @var CryptoService
+     */
+    private $cryptoHelper;
 
-    public function __construct($mailFrom, $mailAdmin, $subject, Context $database)
+    /**
+     * MailManager constructor.
+     * @param $mailFrom
+     * @param $mailAdmin
+     * @param $subject
+     * @param Context $database
+     * @param CryptoService $cryptoHelper
+     */
+    public function __construct($mailFrom, $mailAdmin, $subject, Context $database, CryptoService $cryptoHelper)
     {
         $this->database = $database;
         $this->mailFrom = $mailFrom;
         $this->mailAdmin = $mailAdmin;
         $this->subject = $subject;
+        $this->cryptoHelper = $cryptoHelper;
     }
 
     public function sendInsertMail($presenter, $row)
@@ -44,7 +58,7 @@ class MailManager
         $params = array(
             "_presenter" => $presenter,
             "data" => $row,
-            "id" => base64_encode($row['id'])
+            "id" => $this->cryptoHelper->encrypt($row['id'])
         );
         UIMacros::install($message->getCompiler());
         $body = $message->renderToString(__DIR__ . '/../presenters/templates/email.latte', $params);
@@ -64,12 +78,17 @@ class MailManager
             $body = $message->renderToString(__DIR__ . '/../presenters/templates/emailAdmin.latte', $params);
             $mail = new Message;
             $mail->setFrom($this->mailFrom)
-                ->addTo($this->mailAdmin)
                 ->setSubject("Nový inzerát!")
                 ->setHtmlBody($body);
             $mailer = new SendmailMailer;
+            if (is_array($this->mailAdmin)) {
+                foreach ($this->mailAdmin as $mailAddress) {
+                    $mail->addTo($mailAddress);
+                }
+            } else {
+                $mail->addTo($this->mailAdmin);
+            }
             $mailer->send($mail);
-
 
 
         } catch (Exception $ex) {

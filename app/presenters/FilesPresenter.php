@@ -13,8 +13,7 @@ class FilesPresenter extends Presenter
 
     public function actionPhoto($id)
     {
-        $id = base64_decode($id);
-        $row = $this->manager->row($id);
+        $row = $this->manager->findRowId($id);
         if ($row == null || $row == false) {
             Image::fromBlank(200, 200)->send();
         } else {

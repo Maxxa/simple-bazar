@@ -17,7 +17,6 @@ class DeactivatePresenter extends BasePresenter
     public function actionDefault($id, $history)
     {
         if ($id != null) {
-            $id = base64_decode($id);
             if ($this->manager->deactivate($id))
                 $this->flashMessage("Inzerát byl úspěšně deaktivován!", "success");
         }
