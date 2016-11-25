@@ -108,10 +108,13 @@ class AdvertismentManager
     public function findRowId($id)
     {
         $decodedId = base64_decode($id);
-        $row = $this->row($decodedId);
-        if ($row != FALSE && $this->dateParam->getTimestamp() > $row->timestamp->getTimestamp()) {
-            return $row;
-        }
+        if (is_numeric($decodedId)) {
+            $row = $this->row($decodedId);
+
+            if ($row != FALSE && $this->dateParam->getTimestamp() > $row->timestamp->getTimestamp()) {
+                return $row;
+            }
+        };
 
         try {
             $id = $this->cryptoService->decrypt($id);

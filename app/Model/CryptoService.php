@@ -28,8 +28,8 @@ class CryptoService extends Object
 
     public function __construct($apiKey)
     {
-        dump(base64_encode($this->generateKey()));
-        die();
+//        dump(base64_encode($this->generateKey()));
+//        die();
         $this->apiKey = base64_decode($apiKey);
     }
 
