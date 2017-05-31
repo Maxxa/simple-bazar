@@ -58,7 +58,8 @@ class MailManager
         $params = array(
             "_presenter" => $presenter,
             "data" => $row,
-            "id" => $this->cryptoHelper->encrypt($row['id'])
+            "id" => $this->cryptoHelper->encrypt($row['id']),
+	        "text" => $row->text
         );
         UIMacros::install($message->getCompiler());
         $body = $message->renderToString(__DIR__ . '/../presenters/templates/email.latte', $params);
@@ -72,7 +73,6 @@ class MailManager
             $mailer->send($mail);
 
             $params['email'] = $row->email;
-            $params['text'] = $row->text;
             $params['name'] = $row->name;
 
             $body = $message->renderToString(__DIR__ . '/../presenters/templates/emailAdmin.latte', $params);
