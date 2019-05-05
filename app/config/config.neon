@@ -26,6 +26,7 @@ services:
 	router: App\RouterFactory::createRouter
 	- App\Components\IAdvertisementForm
 	- App\Components\IAdvertisementList
+	- App\Model\BanIPModel
 	- App\Model\AdvertismentManager(%security-change-day%)
 	- App\Model\UserManager(%userName%,%userPassword%)
 	- App\Model\MailManager(%mail-from%,%mail-admin%,%subject%)

@@ -1,7 +1,9 @@
 <?php
+
 namespace App\Components;
 
 use App\Model\AdvertismentManager;
+use App\Model\BanIPModel;
 use App\Model\MailManager;
 use Nette\Application\UI\Form;
 use Nette\Http\FileUpload;
@@ -26,6 +28,11 @@ class AdvertisementForm extends BaseComponent
 
     private $maxWith = 600;
     private $maxHeight = 600;
+    private $wwwDir;
+    /**
+     * @var BanIPModel
+     */
+    private $banModel;
 
 
     /**
@@ -33,12 +40,15 @@ class AdvertisementForm extends BaseComponent
      * @param AdvertismentManager $manager
      * @param MailManager $mailManager
      * @param Request $request
+     * @param BanIPModel $benModel
      */
-    public function __construct(AdvertismentManager $manager, MailManager $mailManager, Request $request)
+    public function __construct($wwwDir, AdvertismentManager $manager, MailManager $mailManager, Request $request, BanIPModel $benModel)
     {
         $this->manager = $manager;
         $this->mailManager = $mailManager;
         $this->request = $request;
+        $this->banModel = $benModel;
+        $this->wwwDir = $wwwDir;
     }
 
     public function createComponentForm()
@@ -63,8 +73,10 @@ class AdvertisementForm extends BaseComponent
 //            ->setRequired("")
             ->addRule(Form::IMAGE, 'Vložený soubor musí být obrázek')//            ->addRule(Form::MAX_LENGTH, 'Maximálně je povoleno nahrád 10 obrázků!', 10)
         ;
+        $form->addCheckbox("confirmTermsAndCondition", "Souhlasím s obchodními podmínkami")
+            ->setRequired("Pro přidání inzerátu musíte souhlasit s obchondními podmínkami");
 
-//        $c = $form->addReCaptcha('captcha', NULL, "Please prove you're not a robot.");
+        $c = $form->addReCaptcha('captcha', NULL, "Please prove you're not a robot.");
 
         $form->addSubmit("save", "Přidat");
 
@@ -72,16 +84,27 @@ class AdvertisementForm extends BaseComponent
         return $form;
     }
 
+    public function render()
+    {
+        $this->template->wwwDir = $this->wwwDir;
+        parent::render();
+    }
+
     public function onSave(Form $form, $values)
     {
         try {
-            $values['ip_address'] = $this->request->getRemoteAddress();
-            $values['image'] = $this->buildImg($values['image']);
-
-            $row = $this->manager->insert($values);
-            $this->mailManager->sendInsertMail($this->presenter, $row);
-            $this->flashAndRedirect("Inzerát byl úspěšně vložen", "success");
-        } catch (Exception$ex) {
+            $ip = $this->request->getRemoteAddress();
+            $values['ip_address'] = $ip;
+            unset($values['confirmTermsAndCondition']);
+            if ($this->banModel->isBan($ip)) {
+                throw new Exception();
+            } else {
+                $values['image'] = $this->buildImg($values['image']);
+                $row = $this->manager->insert($values);
+                $this->mailManager->sendInsertMail($this->presenter, $row);
+                $this->flashAndRedirect("Inzerát byl úspěšně vložen", "success");
+            }
+        } catch (Exception $ex) {
             $this->flashAndRedirect("Při vkládání inzerátu nastala chyba!", "danger");
         }
     }

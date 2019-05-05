@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Components;
 
 use App\Collegas\Security\CryptoService;
@@ -123,13 +124,15 @@ class AdvertisementList extends BaseComponent
 
     public function cryptId($id)
     {
-        return  $this->cryptoHelper->encrypt($id);
+        return $this->cryptoHelper->encrypt($id);
     }
 
     public function buildImage($image)
     {
         $image = Image::fromString($image);
-        return ImageUtil::resizePhoto($image, 100, 100);
+        $result = ImageUtil::resizePhoto($image, 100, 100);
+        unset($image);
+        return $result;
     }
 
     public function buildEmail($email)

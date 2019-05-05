@@ -104,6 +104,15 @@
                             <strong>{$row['name']}</strong>
                             {var $email = $control->buildEmail($row['email'])}
                             <span>&nbsp;</span><a href="#" class="em-address">{$email}</a>
+                            <span>&nbsp;</span> {$row['ip_address']}
+                            {if $user->isLoggedIn()==1 && $history}
+
+                                <a href="{plink Deactivate:ban id=>$cryptoId}"
+                                   class="chip btn waves-light red">
+                                    <i class="small material-icons ">remove_circle</i>
+                                </a>
+                            {/if}
+
                         </div>
                         <div class="col s12 m3 l3 right-align line-action">
                             {$row['timestamp']|date:'d. m. Y H:m'}

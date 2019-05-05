@@ -19,7 +19,8 @@ class HomepagePresenter extends BasePresenter
 
     public function createComponentForm()
     {
-        return $this->formFactory->create();
+       $params = $this->context->getParameters();
+       return $this->formFactory->create($params['wwwDir']);
     }
 
     public function createComponentList()

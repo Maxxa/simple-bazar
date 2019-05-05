@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Model;
 
 use App\Collegas\Security\CryptoService;
@@ -102,7 +103,9 @@ class AdvertismentManager
 
     public function dataAll()
     {
-        return $this->database->table(self::TABLE_NAME)->order("timestamp DESC");
+        return $this->database->table(self::TABLE_NAME)->order("timestamp DESC")
+            ->where("(year(now()) >= (year(timestamp)-1))")
+            ->where("(month(now()) >= month(timestamp))");
     }
 
     public function findRowId($id)
@@ -122,5 +125,13 @@ class AdvertismentManager
             return false;
         }
         return $this->row($id);
+    }
+
+    public function deactivateIP($ipAddress)
+    {
+        $selection = $this->rows()->where(array('ip_address' => $ipAddress));
+        foreach ($selection as $row) {
+            $row->update(array("enabled" => 0));
+        }
     }
 }
