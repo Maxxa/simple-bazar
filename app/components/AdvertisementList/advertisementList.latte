@@ -104,8 +104,9 @@
                             <strong>{$row['name']}</strong>
                             {var $email = $control->buildEmail($row['email'])}
                             <span>&nbsp;</span><a href="#" class="em-address">{$email}</a>
-                            <span>&nbsp;</span> {$row['ip_address']}
+                            <span>&nbsp;</span>
                             {if $user->isLoggedIn()==1 && $history}
+                                {$row['ip_address']}
 
                                 <a href="{plink Deactivate:ban id=>$cryptoId}"
                                    class="chip btn waves-light red">
