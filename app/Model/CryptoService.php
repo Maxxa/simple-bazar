@@ -1,96 +1,64 @@
 <?php
 
-namespace App\Collegas\Security;
+namespace App\Security;
 
 use App\Helpers\CryptoHelper;
-use Nette\Object;
+use Nette\SmartObject;
 
 /**
  * Description of CryptoService
  *
  * @author Vojta
  */
-class CryptoService extends Object
+class CryptoService
 {
+    use SmartObject;
+
+    const CIPHER = 'aes-256-cbc';
 
     private $apiKey;
+    private $iv;
 
-    const KEY_BYTE_SIZE = 16;
+    const KEY_BYTE_SIZE = 64;
+    const IV_BYTE_SIZE = 16;
 
-    // the default options to use.
-    // most of the time you won't need to change these
-    // unless your client doesn't support these.
-    private $options = array(
-        'method' => MCRYPT_RIJNDAEL_256,
-        'mode' => MCRYPT_MODE_ECB,
-        'rand_source' => MCRYPT_RAND,
-    );
-
-    public function __construct($apiKey)
+    public function __construct($apiKey, $iv)
     {
-//        dump(base64_encode($this->generateKey()));
-//        die();
-        $this->apiKey = base64_decode($apiKey);
+        $this->apiKey = $apiKey;
+        $this->iv = base64_decode($iv);
     }
 
     /**
-     * @return string
-     */
-    public function generateKey()
-    {
-        return openssl_random_pseudo_bytes(self::KEY_BYTE_SIZE);
-    }
-
-    /**
-     * encrypt the pain text string.
-     * the returned value is a raw binary string, so if you plan to pass it over the
-     * wire it makes sense to base64 encode it.
      * @param $plaintext
+     *
      * @return string
      */
     public function encrypt($plaintext)
     {
-        $encrypted = mcrypt_encrypt(
-            $this->options['method'],
-            $this->apiKey,
-            $plaintext,
-            $this->options['mode'],
-            mcrypt_create_iv(
-                mcrypt_get_iv_size(
-                    $this->options['method'],
-                    $this->options['mode']
-                ),
-                $this->options['rand_source']
-            )
-        );
-        return base64_encode(CryptoHelper::binToHex($encrypted));
+        $data = openssl_encrypt($plaintext, self::CIPHER, $this->apiKey, OPENSSL_RAW_DATA, $this->iv);
+        return base64_encode(CryptoHelper::binToHex($data));
     }
 
-    // decrypt the data.
-    // note: you may lose "\0" at the end of the original string because the php implementation of
-    // mcrypt_decrypt pads the end of the string with this character to preserve a given block size.
-    // (sloppy, but I don't know of a work-around.
     /**
      * @param $encryptedtext
+     *
      * @return string
      */
     public function decrypt($encryptedtext)
     {
-        $binaryText = CryptoHelper::hexToBin(base64_decode($encryptedtext));
-        $result = rtrim(mcrypt_decrypt(
-            $this->options['method'],
-            $this->apiKey,
-            $binaryText,
-            $this->options['mode'],
-            mcrypt_create_iv(
-                mcrypt_get_iv_size(
-                    $this->options['method'],
-                    $this->options['mode']
-                ),
-                $this->options['rand_source']
-            )
-        ), "\0");
-        return $result;
+        $decoded = CryptoHelper::hexToBin(base64_decode($encryptedtext));
+        return openssl_decrypt($decoded, self::CIPHER, $this->apiKey, OPENSSL_RAW_DATA, $this->iv);
+    }
+
+    public function generateKey(int $byteLength = self::KEY_BYTE_SIZE)
+    {
+        $encryption_key = openssl_random_pseudo_bytes($byteLength);
+        return base64_encode($encryption_key);
+    }
+
+    public function generateIV(int $byteLength = self::IV_BYTE_SIZE)
+    {
+        return base64_encode(openssl_random_pseudo_bytes($byteLength));
     }
 
 }
