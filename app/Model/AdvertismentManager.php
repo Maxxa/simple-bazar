@@ -2,7 +2,7 @@
 
 namespace App\Model;
 
-use App\Collegas\Security\CryptoService;
+use App\Security\CryptoService;
 use Exception;
 use Nette\Database\Context;
 use Nette\Utils\DateTime;
@@ -18,16 +18,14 @@ class AdvertismentManager
     /** @var Context */
     private $database;
 
-    private $dateParam;
     /**
      * @var CryptoService
      */
     private $cryptoService;
 
-    public function __construct($dateParam, Context $database, CryptoService $cryptoHelper)
+    public function __construct(Context $database, CryptoService $cryptoHelper)
     {
         $this->database = $database;
-        $this->dateParam = DateTime::createFromFormat('d. m. Y', $dateParam);
         $this->cryptoService = $cryptoHelper;
     }
 
@@ -113,8 +111,7 @@ class AdvertismentManager
         $decodedId = base64_decode($id);
         if (is_numeric($decodedId)) {
             $row = $this->row($decodedId);
-
-            if ($row != FALSE && $this->dateParam->getTimestamp() > $row->timestamp->getTimestamp()) {
+            if ($row != FALSE) {
                 return $row;
             }
         };
