@@ -1,34 +1,45 @@
 parameters:
-	mail-from: '####'
-	mail-admin: ['####','aaa']
+	mail-from: 'inzerat@XXX.cz'
+	mail-admin: ['admin@xxx.com']
 	subject: "Inzerát byl úspěšně přidán"
 	history-item-per-page: 25
-	security-key: 'LgJ9yPD5mfmvI9RkygYXrA==' ## DEFAULT PRIVATE KEY .. YOU MUST CHANGE!!!
-	security-change-day: '15. 11. 2016'
+	security-key: 'XXX'
+	security-iv: 'XXX'
+
 application:
 	errorPresenter: Error
 	mapping:
 		*: App\*Module\Presenters\*Presenter
 
 extensions:
-	reCaptcha: ReCaptchaControl\ReCaptchaExtension
+	recaptcha: Contributte\ReCaptcha\DI\ReCaptchaExtension
 
-reCaptcha:
-	siteKey: '####'
-	secretKey: '####'
-	methodName: 'addReCaptcha' # optional
+recaptcha:
+	siteKey: '###'
+	secretKey: '###'
+
+mail:
+    smtp: true
+    host: smtp.xxx.cz
+    port: 465
+    secure: ssl
+    username: inzerat@xxx.cz
+    password: XXXX
 
 session:
 	expiration: 14 days
 
-
 services:
-	router: App\RouterFactory::createRouter
+	router: \App\Router\RouterFactory::createRouter
 	- App\Components\IAdvertisementForm
 	- App\Components\IAdvertisementList
 	- App\Model\BanIPModel
-	- App\Model\AdvertismentManager(%security-change-day%)
-	- App\Model\UserManager(%userName%,%userPassword%)
+	- App\Model\AdvertismentManager
+	userManager:
+	    class: App\Model\UserManager
+	    setup:
+	        - init(%userName%,%userPassword%)
 	- App\Model\MailManager(%mail-from%,%mail-admin%,%subject%)
 	- App\AdminModule\Forms\ILoginForm
-	- App\Collegas\Security\CryptoService(%security-key%)
+	- App\Security\CryptoService(%security-key%,%security-iv%)
+	- App\Components\MailingTemplate
