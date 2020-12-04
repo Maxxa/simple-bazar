@@ -2,6 +2,7 @@
 namespace App\Components;
 
 use Nette\Application\UI\Control;
+use Nette\Application\UI\ITemplate;
 
 /**
  * Description of BaseComponent
@@ -15,8 +16,9 @@ abstract class BaseComponent extends Control {
         $this->template->render();
     }
 
-    public function getTemplate($class = NULL) {
-        $template = parent::getTemplate($class);
+    public function createTemplate(): ITemplate
+    {
+        $template = parent::createTemplate();
         $template->setFile($this->getTemplateFilePath());
         return $template;
     }

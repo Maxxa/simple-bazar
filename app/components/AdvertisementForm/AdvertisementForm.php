@@ -5,10 +5,10 @@ namespace App\Components;
 use App\Model\AdvertismentManager;
 use App\Model\BanIPModel;
 use App\Model\MailManager;
+use Nette\Application\AbortException;
 use Nette\Application\UI\Form;
 use Nette\Http\FileUpload;
 use Nette\Http\Request;
-use Nette\Neon\Exception;
 use Nette\Utils\Image;
 
 class AdvertisementForm extends BaseComponent
@@ -22,7 +22,7 @@ class AdvertisementForm extends BaseComponent
      */
     private $mailManager;
     /**
-     * @var HttpRequest
+     * @var Request
      */
     private $request;
 
@@ -59,7 +59,7 @@ class AdvertisementForm extends BaseComponent
             ->addRule(Form::FILLED, "Položka musí být vyplněna")
             ->setRequired("Položka musí být vyplněna");
         $form->addText("email", "E-mailová adresa")
-            ->setType("email")
+            ->setHtmlType("email")
             ->addRule(Form::FILLED, "Položka musí být vyplněna")
             ->addRule(Form::EMAIL, "Zadaný e-mail není validní.")
             ->setRequired("Položka musí být vyplněna");
@@ -76,7 +76,7 @@ class AdvertisementForm extends BaseComponent
         $form->addCheckbox("confirmTermsAndCondition", "Souhlasím s obchodními podmínkami")
             ->setRequired("Pro přidání inzerátu musíte souhlasit s obchondními podmínkami");
 
-        $c = $form->addReCaptcha('captcha', NULL, "Please prove you're not a robot.");
+        $form->addInvisibleReCaptcha('captcha', TRUE, 'Are you a bot?');
 
         $form->addSubmit("save", "Přidat");
 
@@ -97,15 +97,17 @@ class AdvertisementForm extends BaseComponent
             $values['ip_address'] = $ip;
             unset($values['confirmTermsAndCondition']);
             if ($this->banModel->isBan($ip)) {
-                throw new Exception();
+                throw new \Exception();
             } else {
                 $values['image'] = $this->buildImg($values['image']);
                 $row = $this->manager->insert($values);
                 $this->mailManager->sendInsertMail($this->presenter, $row);
-                $this->flashAndRedirect("Inzerát byl úspěšně vložen", "success");
+                $this->flashAndRedirect("Inzerát byl úspěšně vložen.", "success");
             }
-        } catch (Exception $ex) {
-            $this->flashAndRedirect("Při vkládání inzerátu nastala chyba!", "danger");
+        } catch (\Exception $ex) {
+            if (!($ex instanceof AbortException)) {
+                $this->flashAndRedirect("Při vkládání inzerátu nastala chyba! " . $ex->getMessage(), "danger");
+            }
         }
     }
 
@@ -115,7 +117,7 @@ class AdvertisementForm extends BaseComponent
         if ($this->presenter->isAjax()) {
             $this->presenter->redrawControl();
         } else {
-            $this->redirect('this');
+            $this->presenter->redirect('this');
         }
 
     }

@@ -2,16 +2,20 @@
 
 namespace App\Model;
 
-use Nette\Object;
 use Nette\Security\AuthenticationException;
 use Nette\Security\IAuthenticator;
 use Nette\Security\Identity;
+use Nette\Security\IIdentity;
 use Nette\Security\Passwords;
+use Nette\SmartObject;
 
 /**
  * Users management.
  */
-class UserManager extends Object implements IAuthenticator {
+class UserManager implements IAuthenticator
+{
+
+    use SmartObject;
 
     /**
      * @var
@@ -21,32 +25,30 @@ class UserManager extends Object implements IAuthenticator {
      * @var
      */
     private $userPassword;
+    /**
+     * @var Passwords
+     */
+    private $passwords;
 
-    public function __construct($userName, $userPassword) {
-
-        $this->userName = $userName;
-        $this->userPassword = $userPassword;
+    public function __construct(Passwords $passwords)
+    {
+        $this->passwords = $passwords;
     }
 
-    /**
-     * Performs an authentication.
-     * @param array $credentials
-     * @return Identity
-     * @throws AuthenticationException
-     */
-    public function authenticate(array $credentials) {
-        list($username, $password) = $credentials;
+    public function init($userName, $password)
+    {
+        $this->userName = $userName;
+        $this->userPassword = $password;
+    }
 
-        if ($username!= $this->userName) {
+    function authenticate(array $credentials): IIdentity
+    {
+        list($username, $password) = $credentials;
+        if ($username != $this->userName) {
             throw new AuthenticationException('The username is incorrect.', self::IDENTITY_NOT_FOUND);
-        } elseif (!Passwords::verify($password, Passwords::hash($this->userPassword))) {
+        } elseif (!$this->passwords->verify($password, $this->passwords->hash($this->userPassword))) {
             throw new AuthenticationException('The password is incorrect.', self::INVALID_CREDENTIAL);
         }
         return new Identity($this->userName, "admin");
     }
-
-}
-
-class DuplicateNameException extends \Exception {
-
 }

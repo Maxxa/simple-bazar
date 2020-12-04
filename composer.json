@@ -1,14 +1,10 @@
 {
-	"name": "nette/web-project",
-	"description": "Nette: Standard Web Project",
-	"type": "project",
-	"license": ["MIT", "BSD-3-Clause", "GPL-2.0", "GPL-3.0"],
-	"require": {
-		"nette/nette": "v2.3.1",
-		"uestla/recaptcha-control": "^3.0.2"
-	},
-	"require-dev": {
-		"nette/tester": "^1.6"
-	},
-	"minimum-stability": "stable"
+  "name": "maxxa/simple-bazar",
+  "description": "Simple bazar template",
+  "type": "project",
+  "require": {
+    "nette/nette": "^v3.0",
+    "contributte/recaptcha": "^v3.3"
+  },
+  "minimum-stability": "stable"
 }

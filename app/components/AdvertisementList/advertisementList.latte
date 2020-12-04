@@ -33,15 +33,15 @@
         </div>
     </li>
 </ul>
-{if $paginator !=null && $paginator->getPageCount()>1}
+{if $paginator != null && $paginator->getPageCount() > 1}
     <ul class="pagination">
         <li class="{if $paginator->isFirst()}disabled{else}waves-effect{/if}"><a
                     href="{if $paginator->isFirst()}#{else}{plink this page=>$paginator->getPage()-1}{/if}"><i
                         class="material-icons">chevron_left</i></a>
         </li>
-        {for $i= 1; $i<=$paginator->getPageCount();$i++}
-            <li class="{if $paginator->getPage()==$i}active{else}waves-effect{/if}"><a
-                        href="{if $paginator->getPage()!=$i}{plink this page=>$i}{else}#{/if}">{$i}</a></li>
+        {for $i = 1; $i <= $paginator->getPageCount();$i++}
+            <li class="{if $paginator->getPage() == $i}active{else}waves-effect{/if}"><a
+                        href="{if $paginator->getPage() != $i}{plink this page=>$i}{else}#{/if}">{$i}</a></li>
         {/for}
         <li class="{if $paginator->isLast()}disabled{else}waves-effect{/if}"><a
                     href="{if $paginator->isLast()}#{else}{plink this page=>$paginator->getPage()+1}{/if}"><i
@@ -59,10 +59,10 @@
                     <div class="row">
                         <div class="col s7 m9 l10">
                             <p>
-                                {!$control->buildText($row['text'])}
+                                {$control->buildText($row['text'])|noescape}
                             </p>
                             {var $cryptoId = $control->cryptId($row['id'])}
-                            {if $user->isLoggedIn()==1 && $history}
+                            {if $user->isLoggedIn() == 1 && $history}
 
                                 <a href="{plink Deactivate:default id=>$cryptoId,history=>true}"
                                    class="chip btn waves-light blue">
@@ -71,9 +71,9 @@
                             {/if}
                         </div>
                         <div class="col s4 m3 l2">
-                            {if $row['image']!=null}
+                            {if $row['image'] != null}
                                 <a class="waves-effect waves-light venobox" href="{plink Files:photo id=>$cryptoId}">
-                                    <img src="{$control->buildImage($row['image'])|dataStream}"/>
+                                    <img src="{plink Files:photoSmall id=>$cryptoId}"/>
                                 </a>
                             {/if}
                         </div>
@@ -84,14 +84,14 @@
                     <div class="row">
                         <div class="col s12 m3 l3">
                             <div class="chip">
-                                {if $row['type']==sale}
+                                {if $row['type'] == sale}
                                     Prodám
                                 {else}
                                     Koupím
                                 {/if}
 
                             </div>
-                            {if $row['enabled']==0}
+                            {if $row['enabled'] == 0}
                                 <div class="chip red">
                                     Neaktivní
                                 </div>
@@ -105,7 +105,7 @@
                             {var $email = $control->buildEmail($row['email'])}
                             <span>&nbsp;</span><a href="#" class="em-address">{$email}</a>
                             <span>&nbsp;</span>
-                            {if $user->isLoggedIn()==1 && $history}
+                            {if $user->isLoggedIn() == 1 && $history}
                                 {$row['ip_address']}
 
                                 <a href="{plink Deactivate:ban id=>$cryptoId}"

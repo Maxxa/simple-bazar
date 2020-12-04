@@ -15,7 +15,7 @@ class LoginForm extends BaseComponent
         $form->addText("username")->setRequired("E-mail is required!");
         $form->addPassword("password")->setRequired("Password is required!");
         $form->addSubmit("login");
-        $form->onSuccess[] = $this->login;
+        $form->onSuccess[] = [$this,'login'];
         return $form;
     }
 

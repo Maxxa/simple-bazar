@@ -2,7 +2,7 @@
 
 namespace App\Components;
 
-use App\Collegas\Security\CryptoService;
+use App\Security\CryptoService;
 use App\Helpers\ImageUtil;
 use App\Model\AdvertismentManager;
 use Nette\Application\UI\Form;
@@ -125,14 +125,6 @@ class AdvertisementList extends BaseComponent
     public function cryptId($id)
     {
         return $this->cryptoHelper->encrypt($id);
-    }
-
-    public function buildImage($image)
-    {
-        $image = Image::fromString($image);
-        $result = ImageUtil::resizePhoto($image, 100, 100);
-        unset($image);
-        return $result;
     }
 
     public function buildEmail($email)

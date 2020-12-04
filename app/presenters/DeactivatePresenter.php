@@ -2,11 +2,8 @@
 
 namespace App\Presenters;
 
-use App\Components\IAdvertisementForm;
-use App\Components\IAdvertisementList;
 use App\Model\AdvertismentManager;
 use App\Model\BanIPModel;
-use Nette;
 
 
 class DeactivatePresenter extends BasePresenter
@@ -18,7 +15,7 @@ class DeactivatePresenter extends BasePresenter
     /** @var BanIPModel @inject */
     public $banModel;
 
-    public function actionDefault($id, $history)
+    public function actionDefault($id, $history = null)
     {
         if ($id != null) {
             if ($this->manager->deactivate($id))
