@@ -1,7 +1,8 @@
 <ul class="collapsible popout" data-collapsible="accordion">
     <li>
         <div class="collapsible-header waves-effect waves-light green z-depth-1">
-            <i class="material-icons prefix">play_for_work</i> Přidat nový inzerát</div>
+            <i class="material-icons prefix">play_for_work</i> Přidat nový inzerát
+        </div>
         <div class="collapsible-body collapsible-container">
             <div class="row">
                 <form n:name="form" class="col s12">
@@ -53,17 +54,28 @@
                     </div>
                     <p>
                         <input n:name="confirmTermsAndCondition" type="checkbox" id="confirmTerms" class="input-field">
-						{var $filePath = "/doc/obchodniPodminky.pdf"}
-                        {var $fileExist = file_exists($wwwDir.$filePath)}
-                        <label for="confirmTerms">Souhlasím s {if $fileExist==false}obchodními podmínkami{/if}</label>
+                        {var $filePath = "/doc/obchodniPodminky.pdf"}
+                        {var $fileExist = file_exists($wwwDir . $filePath)}
+                        <label for="confirmTerms">Souhlasím s {if $fileExist == false}obchodními podmínkami{/if}</label>
                             {if $fileExist}<a href="{$filePath}" target="_blank">obchodními podmínkami</a>{else}{/if}
-                    </p>                    <div class="row">
+                    </p>
+                    <div class="row">
                     </div>
                     <div class="row">
                         <div class="col s12">
                             {input save class=>"btn green"}
                         </div>
                     </div>
+
+                    <script type="text/javascript">
+                        $(document).ready(function () {
+
+                            {foreach $form->getErrors() as $error}
+                                Materialize.toast({$error}, 10000, 'red');
+                            {/foreach}
+
+                        });
+                    </script>
 
                 </form>
             </div>

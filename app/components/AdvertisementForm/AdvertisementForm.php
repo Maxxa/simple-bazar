@@ -71,7 +71,10 @@ class AdvertisementForm extends BaseComponent
         $upload = $form->addUpload("image", "");
         $upload->addConditionOn($upload, Form::FILLED)
 //            ->setRequired("")
-            ->addRule(Form::IMAGE, 'Vložený soubor musí být obrázek')//            ->addRule(Form::MAX_LENGTH, 'Maximálně je povoleno nahrád 10 obrázků!', 10)
+            ->addRule(Form::IMAGE, 'Vložený soubor musí být obrázek')
+            ->addRule(Form::MAX_FILE_SIZE, 'Maximální velikost souboru je 2 MB.',2000 * 1024 /* v bytech */ )
+
+            //            ->addRule(Form::MAX_LENGTH, 'Maximálně je povoleno nahrád 10 obrázků!', 10)
         ;
         $form->addCheckbox("confirmTermsAndCondition", "Souhlasím s obchodními podmínkami")
             ->setRequired("Pro přidání inzerátu musíte souhlasit s obchondními podmínkami");
@@ -106,7 +109,7 @@ class AdvertisementForm extends BaseComponent
             }
         } catch (\Exception $ex) {
             if (!($ex instanceof AbortException)) {
-                $this->flashAndRedirect("Při vkládání inzerátu nastala chyba! " . $ex->getMessage(), "danger");
+                $this->flashAndRedirect("Při vkládání inzerátu nastala chyba! ", "danger");
             }
         }
     }
