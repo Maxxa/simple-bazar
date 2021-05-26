@@ -1,10 +1,10 @@
 <ul class="collapsible popout" data-collapsible="accordion">
     <li>
-        <div class="collapsible-header waves-effect waves-light green z-depth-1">
+        <div class="collapsible-header waves-effect waves-light green z-depth-1 ajax-refresh">
             <i class="material-icons prefix">play_for_work</i> Přidat nový inzerát
         </div>
         <div class="collapsible-body collapsible-container">
-            <div class="row">
+            <div class="row" n:snippet="snippet-form">
                 <form n:name="form" class="col s12">
 
                     <div class="row">
@@ -66,16 +66,28 @@
                             {input save class=>"btn green"}
                         </div>
                     </div>
-
                     <script type="text/javascript">
                         $(document).ready(function () {
 
                             {foreach $form->getErrors() as $error}
-                                Materialize.toast({$error}, 10000, 'red');
+                            Materialize.toast({$error}, 10000, 'red');
                             {/foreach}
 
+                            $('.ajax-refresh').unbind( "click" );
+                            $('.ajax-refresh').on('click', function () {
+                                var ele = $(this);
+                                naja.makeRequest("GET", {link refresh!}, null, { history: false})
+                                    .then(function (payload) {
+                                        $('select').material_select();
+                                        $('textarea').trigger('autoresize');
+                                        if (ele.hasClass('active')) {
+                                            window.Nette.recaptcha(window.grecaptcha);
+                                        }
+                                    });
+                            });
                         });
                     </script>
+
 
                 </form>
             </div>

@@ -72,9 +72,7 @@ class AdvertisementForm extends BaseComponent
         $upload->addConditionOn($upload, Form::FILLED)
 //            ->setRequired("")
             ->addRule(Form::IMAGE, 'Vložený soubor musí být obrázek')
-            ->addRule(Form::MAX_FILE_SIZE, 'Maximální velikost souboru je 2 MB.',2000 * 1024 /* v bytech */ )
-
-            //            ->addRule(Form::MAX_LENGTH, 'Maximálně je povoleno nahrád 10 obrázků!', 10)
+            ->addRule(Form::MAX_FILE_SIZE, 'Maximální velikost souboru je 2 MB.', 2000 * 1024 /* v bytech */)//            ->addRule(Form::MAX_LENGTH, 'Maximálně je povoleno nahrád 10 obrázků!', 10)
         ;
         $form->addCheckbox("confirmTermsAndCondition", "Souhlasím s obchodními podmínkami")
             ->setRequired("Pro přidání inzerátu musíte souhlasit s obchondními podmínkami");
@@ -108,9 +106,26 @@ class AdvertisementForm extends BaseComponent
                 $this->flashAndRedirect("Inzerát byl úspěšně vložen.", "success");
             }
         } catch (\Exception $ex) {
-            if (!($ex instanceof AbortException)) {
+            if ($ex instanceof AbortException) {
+                throw $ex;
+            } else {
                 $this->flashAndRedirect("Při vkládání inzerátu nastala chyba! ", "danger");
+                return;
             }
+        }
+
+    }
+
+    public function handleRefresh()
+    {
+        if ($this->presenter->isAjax()) {
+            if ($this->request->isMethod('POST') == false) {
+                $this->presenter->payload->postGet = TRUE;
+                $this->presenter->payload->url = $this->presenter->link('this');
+                $this->redrawControl();
+            }
+        } else {
+            $this->presenter->redirect('this');
         }
     }
 
@@ -122,7 +137,6 @@ class AdvertisementForm extends BaseComponent
         } else {
             $this->presenter->redirect('this');
         }
-
     }
 
     public function buildImg(FileUpload $img)

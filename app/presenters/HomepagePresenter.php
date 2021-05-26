@@ -4,8 +4,7 @@ namespace App\Presenters;
 
 use App\Components\IAdvertisementForm;
 use App\Components\IAdvertisementList;
-use App\Model\AdvertismentManager;
-use Nette;
+
 
 
 class HomepagePresenter extends BasePresenter
@@ -19,8 +18,8 @@ class HomepagePresenter extends BasePresenter
 
     public function createComponentForm()
     {
-       $params = $this->context->getParameters();
-       return $this->formFactory->create($params['wwwDir']);
+        $params = $this->context->getParameters();
+        return $this->formFactory->create($params['wwwDir']);
     }
 
     public function createComponentList()

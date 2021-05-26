@@ -2,8 +2,11 @@
 
 namespace App\Security;
 
+use App\Helpers\CryptHack;
 use App\Helpers\CryptoHelper;
 use Nette\SmartObject;
+use Nette\Utils\DateTime;
+use Nette\Utils\Strings;
 
 /**
  * Description of CryptoService
@@ -46,6 +49,12 @@ class CryptoService
      */
     public function decrypt($encryptedtext)
     {
+        $endCheckHack = new DateTime('2021-03-01');
+        $current = new DateTime();
+        if ($current < $endCheckHack && array_key_exists($encryptedtext, CryptHack::HACK)) {
+            return (int)CryptHack::HACK[$encryptedtext];
+        }
+
         $decoded = CryptoHelper::hexToBin(base64_decode($encryptedtext));
         return openssl_decrypt($decoded, self::CIPHER, $this->apiKey, OPENSSL_RAW_DATA, $this->iv);
     }
