@@ -43,3 +43,4 @@ services:
 	- App\AdminModule\Forms\ILoginForm
 	- App\Security\CryptoService(%security-key%,%security-iv%)
 	- App\Components\MailingTemplate
+	- App\Helpers\ConfigParameters(%parameters%)

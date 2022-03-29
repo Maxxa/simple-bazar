@@ -2,6 +2,7 @@
 
 namespace App\Components;
 
+use App\Helpers\ConfigParameters;
 use App\Model\AdvertismentManager;
 use App\Model\BanIPModel;
 use App\Model\MailManager;
@@ -42,13 +43,13 @@ class AdvertisementForm extends BaseComponent
      * @param Request $request
      * @param BanIPModel $benModel
      */
-    public function __construct($wwwDir, AdvertismentManager $manager, MailManager $mailManager, Request $request, BanIPModel $benModel)
+    public function __construct(ConfigParameters $configParameters, AdvertismentManager $manager, MailManager $mailManager, Request $request, BanIPModel $benModel)
     {
         $this->manager = $manager;
         $this->mailManager = $mailManager;
         $this->request = $request;
         $this->banModel = $benModel;
-        $this->wwwDir = $wwwDir;
+        $this->wwwDir = $configParameters->wwwDir;
     }
 
     public function createComponentForm()

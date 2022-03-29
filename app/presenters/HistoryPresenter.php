@@ -21,8 +21,7 @@ class HistoryPresenter extends BasePresenter
     public function actionDefault()
     {
         $this->paginator = new Paginator;
-        $params = $this->context->getParameters();
-        $this->paginator->setItemsPerPage($params['history-item-per-page']);
+        $this->paginator->setItemsPerPage($this->configParams->historyItemPerPage);
         if ($this->page) {
             $this->paginator->setPage($this->page);
         }

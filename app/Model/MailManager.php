@@ -3,8 +3,8 @@
 namespace App\Model;
 
 use App\Components\MailingTemplate;
+use App\Helpers\ConfigParameters;
 use App\Security\CryptoService;
-use Nette\Database\Context;
 use Nette\InvalidArgumentException;
 use Nette\Mail\Mailer;
 use Nette\Mail\Message;
@@ -13,8 +13,6 @@ use Nette\Neon\Exception;
 class MailManager
 {
 
-    /** @var Context */
-    private $database;
 
     /**
      * @var
@@ -36,34 +34,36 @@ class MailManager
      * @var Mailer
      */
     private $mailer;
+    /**
+     * @var ConfigParameters
+     */
+    private $configParameters;
 
     /**
      * MailManager constructor.
      * @param $mailFrom
      * @param $mailAdmin
      * @param $subject
-     * @param Context $database
      * @param CryptoService $cryptoHelper
      * @param MailingTemplate $mailingTemplate
      * @param Mailer $mailer
      */
-    public function __construct($mailFrom, $mailAdmin, $subject, Context $database, CryptoService $cryptoHelper, MailingTemplate $mailingTemplate, Mailer $mailer)
+    public function __construct($mailFrom, $mailAdmin, $subject, CryptoService $cryptoHelper, MailingTemplate $mailingTemplate, Mailer $mailer, ConfigParameters $configParameters)
     {
-        $this->database = $database;
         $this->mailFrom = $mailFrom;
         $this->mailAdmin = $mailAdmin;
         $this->subject = $subject;
         $this->cryptoHelper = $cryptoHelper;
         $this->mailingTemplate = $mailingTemplate;
         $this->mailer = $mailer;
+        $this->configParameters = $configParameters;
     }
 
     public function sendInsertMail($presenter, $row)
     {
-        $params = $presenter->context->getParameters();
-//        if ($params['debugMode']) {
-//            return;
-//        }
+        if ($this->configParameters->debugMode) {
+            return;
+        }
 
         $params = array(
             "data" => $row,

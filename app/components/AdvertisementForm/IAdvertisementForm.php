@@ -5,5 +5,5 @@ interface IAdvertisementForm
 {
 
     /** @return AdvertisementForm */
-    public function create($wwwDir);
+    public function create();
 }

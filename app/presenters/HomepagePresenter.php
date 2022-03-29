@@ -6,7 +6,6 @@ use App\Components\IAdvertisementForm;
 use App\Components\IAdvertisementList;
 
 
-
 class HomepagePresenter extends BasePresenter
 {
 
@@ -18,8 +17,7 @@ class HomepagePresenter extends BasePresenter
 
     public function createComponentForm()
     {
-        $params = $this->context->getParameters();
-        return $this->formFactory->create($params['wwwDir']);
+        return $this->formFactory->create();
     }
 
     public function createComponentList()
