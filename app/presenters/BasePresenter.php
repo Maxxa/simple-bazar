@@ -26,7 +26,7 @@ abstract class BasePresenter extends Presenter
             $reader = new \GeoIp2\Database\Reader('/usr/share/GeoIP/GeoLite2-Country.mmdb');
             $record = $reader->country($_SERVER['REMOTE_ADDR']);
 
-            if (!in_array($record->country->isoCode, ['CZ','SK'])) {
+            if (!in_array($record->country->isoCode, ['CZ','SK','GR'])) {
                 $this->error("",444);
             }
 
